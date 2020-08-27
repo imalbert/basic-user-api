@@ -10,8 +10,7 @@
 ### Prerequisites
 
 * Node.js 10.x or 12.x
-* Less secure app access
-Warning: Switch this option for your gmail account to use it for this app's email feature. This option can be turned off for gmail accounts that do not have 2-step Verification enabled. If you really want an active account, you can find the option here https://myaccount.google.com/u/1/lesssecureapps?pli=1.
+* Less secure app access - Warning: Switch this option for your gmail account to use it for this app's email feature. This option can be turned off for gmail accounts that do not have 2-step Verification enabled. If you really want an active account, you can find the option here https://myaccount.google.com/u/1/lesssecureapps?pli=1.
 
 * Create a `.env` file at the root of the project
     ```
