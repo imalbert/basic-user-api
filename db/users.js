@@ -1,8 +1,8 @@
 'use strict';
 
-const users = {}
+const {createId} = require('../utils')
 
-const uuidv4 = require('uuid').v4
+const users = {}
 const ACCOUNT_STATUS = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
@@ -30,7 +30,7 @@ module.exports.register = ({ email, password, first_name = '', last_name = '' },
     done(new Error(`'password' is required for user registration`))
   } else {
     // generate new id
-    const id = uuidv4()
+    const id = createId()
     const newUser = {
       id,
       email,
