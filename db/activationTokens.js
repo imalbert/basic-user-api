@@ -3,18 +3,18 @@
 const createToken = require('../utils').createToken
 
 const activationTokens = {}
-// { 'user_id_001': 'account_activation_token_001' }
+// { 'account_activation_token_001': 'user_id_001' }
 
-module.exports.findByUserId = (userId, done) => {
-  const token = activationTokens[userId]
+module.exports.findByActivationToken = (token, done) => {
+  const userId = activationTokens[token]
 
-  if (token) return done(null, token)
-  return done(new Error(`Unable to find activation token for the user ${userId}`));
+  if (userId) return done(null, userId)
+  return done(new Error(`Unable to find user for the activation token ${token}`));
 }
 
 module.exports.create = createToken
 module.exports.insert = (userId, token, done) => {
-  activationTokens[userId] = token
+  activationTokens[token] = userId
 
   return done(null, { userId, token })
 }

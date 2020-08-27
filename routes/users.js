@@ -41,6 +41,7 @@ module.exports = {
         if (err) {
           res.status(500).json({ error: err.message })
         } else {
+          console.log('Activation token created ', activation.token)
           req.activation = activation
           next()
         }
@@ -58,10 +59,29 @@ module.exports = {
     }
   ],
   activate: [
-    (req, res) => { res.send(`activate user`) },
+    function verifyActivationToken(req, res, next) {
+      const token = req.query.accountActivationToken
+      if (token) {
+        db.activationTokens.findByActivationToken(token, (err, userId) => {
+          if (err) {
+            res.status(500).json({ error: err.message })
+          } else {
+            req.userId = userId
+            next()
+          }
+        })
+      }
+    },
+    function activateUser(req, res) {
+      const token = req.query.accountActivationToken
+      db.users.activateUser(req.userId, (err, user) => {
+        console.log(`Account has been activated for user ${user.id}`, user)
+        res.status(204).send(`Account has been activated for user ${user.id}`)
+      })
+    }
   ],
   chPasswd: [
-    function verifyToken (req, res, next) {
+    function verifyAccessToken (req, res, next) {
       const accessToken = req.headers.authorization.split(' ')[1]
       db.accessTokens.findOne(accessToken, (err, userId) => {
         if (err || !userId) {

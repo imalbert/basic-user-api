@@ -81,9 +81,19 @@ function changePassword(userId, newPassword, done) {
   done(null, users[userId])
 }
 
+function activateUser(userId, done) {
+  users[userId] = {
+    ...users[userId],
+    account_status: ACCOUNT_STATUS.ACTIVE,
+  }
+
+  done(null, users[userId])
+}
+
 module.exports.findAll = findAll
 module.exports.findById = findById
 module.exports.findByEmail = findByEmail
 module.exports.register = register
 module.exports.findById = findById
 module.exports.changePassword = changePassword
+module.exports.activateUser = activateUser
