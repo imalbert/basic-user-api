@@ -16,11 +16,12 @@ app.get('/auth/logout', routes.authenticate.logout)
 app.route('/api/users')
   .get(routes.users.find)
   .post(routes.users.register)
-  .put(routes.users.activate)
   .patch([
     passport.authenticate('bearer', { session: false }),
     ...routes.users.chPasswd
   ])
+app.route('/api/users/activate')
+  .get(routes.users.activate)
 
 app.listen(process.env.PORT, function(){
   console.log(`Express server is running on ${process.env.PORT}.`);

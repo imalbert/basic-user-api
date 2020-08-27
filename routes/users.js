@@ -1,6 +1,7 @@
 'use strict'
 
 const db = require('../db')
+const emailUtility = require('../utils/sendEmail')
 const contains = (a, b) => a.indexOf(b) >= 0
 
 module.exports = {
@@ -49,8 +50,24 @@ module.exports = {
     },
     function sendActivationEmail (req, res, next) {
       console.log(`Sending activation email...`)
-      // TODO: send an actual activation email link
-      console.log(`activation email sent for user ${req.activation.userId}; token: ${req.activation.token}`)
+      const activationLink = `${req.protocol}://${req.hostname}:${process.env.PORT}/api/users/activate/?accountActivationToken=${req.activation.token}`
+      const emailOptions = {
+        to: req.registration.email,
+        subject: `Email verification for account activation (basic-user-api)`,
+        text: `Please follow the link below to activate your account
+${activationLink}
+        `,
+      }
+
+      emailUtility.sendEmail(emailOptions, (err, result) => {
+        if (err) {
+          console.log(`A problem occurred while sending activation email: ${err}`)
+        } else {
+          console.log(`Activation email sent for user ${req.activation.userId}; token: ${req.activation.token}`)
+          console.log(result)
+        }
+      })
+
       next()
     },
     function completeRegistration (req, res) {
@@ -76,7 +93,7 @@ module.exports = {
       const token = req.query.accountActivationToken
       db.users.activateUser(req.userId, (err, user) => {
         console.log(`Account has been activated for user ${user.id}`, user)
-        res.status(204).send(`Account has been activated for user ${user.id}`)
+        res.status(200).send(`Account has been activated for user ${user.id}`)
       })
     }
   ],

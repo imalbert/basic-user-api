@@ -40,7 +40,6 @@ function findById (id, done) {
 
 function findByEmail (email, done) {
   const user = Object.values(users).find(user => user.email === email)
-  console.log('BOOO', user)
   if (user) return done(null, user)
   return done(new Error(`Unable to find user with the email ${email}`));
 };
