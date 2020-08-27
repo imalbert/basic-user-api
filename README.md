@@ -26,4 +26,7 @@ Warning: Switch this option for your gmail account to use it for this app's emai
 
 ### Start the server
 
-##### `npm start` or `yarn start`
+##### `npm i`
+
+##### `npm start`
+
