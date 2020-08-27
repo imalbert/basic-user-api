@@ -6,8 +6,6 @@ const contains = (a, b) => a.indexOf(b) >= 0
 module.exports = {
   find: [
     function findAllUsers(req, res) {
-      console.log('FIND', req.query.token)
-
       if (req.query.token) {
         db.users.findAll({ authorized: true }, (err, allUsers) => {
           if (err) res.status(500).json({ error: err.message })
@@ -63,6 +61,8 @@ module.exports = {
     (req, res) => { res.send(`activate user`) },
   ],
   chPasswd: [
-    (req, res) => { res.send(`change password`) },
+    function changePassword (req, res) {
+      res.send(`change password`)
+    },
   ]
 }

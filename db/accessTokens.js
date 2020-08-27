@@ -3,18 +3,18 @@
 const createToken = require('../utils').createToken
 
 const accessTokens = {}
-// { 'user_id_001': 'access_token_001' }
+// { 'access_token_001': 'user_id_001' }
 
-module.exports.findByUserId = (userId, done) => {
-  const token = accessTokens[userId]
+module.exports.findOne = (token, done) => {
+  const userId = accessTokens[token]
 
-  if (token) return done(null, token)
-  return done(new Error(`Unable to find access token for the user ${userId}`));
+  if (userId) return done(null, userId)
+  return done(new Error(`Unable to find user for the token ${token}`));
 }
 
 module.exports.create = createToken
 module.exports.insert = (userId, token, done) => {
-  accessTokens[userId] = token
+  accessTokens[token] = userId
 
   return done(null, { userId, token })
 }

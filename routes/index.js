@@ -1,9 +1,9 @@
 'use strict'
 
-const authorize = require('./authorize')
+const authenticate = require('./auth')
 const users = require('./users')
 
 module.exports = {
-  authorize,
+  authenticate,
   users,
 }
