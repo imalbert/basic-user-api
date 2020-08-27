@@ -13,8 +13,8 @@ module.exports = {
     }
   ],
   register: [
-    (req, res, next) => {
-      console.info(`User registration...`)
+    function registerUser (req, res, next) {
+      console.info(`User registration started`)
       db.users.register({ ...req.body }, (err, registration) => {
         if (err) {
           if (contains(err.message, `email`) || contains(err.message, `password`)) {
@@ -27,20 +27,26 @@ module.exports = {
         }
       })
     },
-    (req, res, next) => {
-      console.log(`sending an activation email...`)
+    function createActivationToken (req, res, next) {
+      console.log(`Creating activation token...`)
       const activationToken = db.activationTokens.create()
       db.activationTokens.insert(req.registration.id, activationToken, (err, activation) => {
         if (err) {
-            res.status(500).json({ error: err.message })
+          res.status(500).json({ error: err.message })
         } else {
-          // TODO: send an actual activation email link
-          console.log(`activation email sent for user ${activation.userId}; token: ${activation.token}`)
+          req.activation = activation
+          next()
         }
       })
+    },
+    function sendActivationEmail (req, res, next) {
+      console.log(`Sending activation email...`)
+      // TODO: send an actual activation email link
+      console.log(`activation email sent for user ${req.activation.userId}; token: ${req.activation.token}`)
       next()
     },
-    (req, res) => {
+    function completeRegistration (req, res) {
+      console.log(`User registration completed`)
       res.json(req.registration)
     }
   ],
