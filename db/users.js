@@ -7,7 +7,7 @@ const ACCOUNT_STATUS = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
 }
-module.exports = ACCOUNT_STATUS
+module.exports.ACCOUNT_STATUS = ACCOUNT_STATUS
 
 module.exports.findById = (id, done) => {
   const user = users[id]
@@ -18,7 +18,7 @@ module.exports.findById = (id, done) => {
 
 module.exports.findByEmail = (email, done) => {
   const user = Object.values(users).find(user => user.email === email)
-
+  console.log('BOOO', user)
   if (user) return done(null, user)
   return done(new Error(`Unable to find user with the email ${email}`));
 };
