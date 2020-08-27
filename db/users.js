@@ -3,13 +3,24 @@
 const {createId} = require('../utils')
 
 const users = {}
+// {
+//   [id]: {
+//     id,
+//     email,
+//     password,
+//     first_name,
+//     last_name,
+//     account_status: ACCOUNT_STATUS.INACTIVE
+//   }
+// }
+
 const ACCOUNT_STATUS = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
 }
 module.exports.ACCOUNT_STATUS = ACCOUNT_STATUS
 
-module.exports.findAll = ({ authorized }, done) => {
+function findAll ({ authorized }, done) {
   const allUsers = Object.values(users).map(user => ({
     email: user.email,
     first_name: user.first_name,
@@ -20,21 +31,21 @@ module.exports.findAll = ({ authorized }, done) => {
   return done(null, allUsers.map(({ first_name }) => ({ first_name })))
 }
 
-module.exports.findById = (id, done) => {
+function findById (id, done) {
   const user = users[id]
 
   if (user) return done(null, user)
   return done(new Error(`Unable to find user with the id ${id}`));
 };
 
-module.exports.findByEmail = (email, done) => {
+function findByEmail (email, done) {
   const user = Object.values(users).find(user => user.email === email)
   console.log('BOOO', user)
   if (user) return done(null, user)
   return done(new Error(`Unable to find user with the email ${email}`));
 };
 
-module.exports.register = ({ email, password, first_name = '', last_name = '' }, done) => {
+function register ({ email, password, first_name = '', last_name = '' }, done) {
   if (!email) {
     done(new Error(`'email' is required for user registration`))
   } else if (!password) {
@@ -60,3 +71,19 @@ module.exports.register = ({ email, password, first_name = '', last_name = '' },
     })
   }
 }
+
+function changePassword(userId, newPassword, done) {
+  users[userId] = {
+    ...users[userId],
+    password: newPassword,
+  }
+
+  done(null, users[userId])
+}
+
+module.exports.findAll = findAll
+module.exports.findById = findById
+module.exports.findByEmail = findByEmail
+module.exports.register = register
+module.exports.findById = findById
+module.exports.changePassword = changePassword

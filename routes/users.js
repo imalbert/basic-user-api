@@ -61,8 +61,42 @@ module.exports = {
     (req, res) => { res.send(`activate user`) },
   ],
   chPasswd: [
+    function verifyToken (req, res, next) {
+      const accessToken = req.headers.authorization.split(' ')[1]
+      db.accessTokens.findOne(accessToken, (err, userId) => {
+        if (err || !userId) {
+          res.status(500).json({ error: err.message })
+        } else {
+          req.userId = userId
+          next()
+        }
+      })
+    },
+    function verifyPasswords (req, res, next) {
+      db.users.findById(req.userId, (err, user) => {
+        if (err) {
+          res.status(400).json({ error: err.message })
+        } else if (user.password !== req.body.oldpw) {
+          res.status(400).json({ error: `Incorrect password` })
+        } else {
+          next()
+        }
+      })
+    },
     function changePassword (req, res) {
-      res.send(`change password`)
+      const { newpw, again } = req.body
+
+      if (newpw !== again) {
+        res.status(400).json({ error: `Passwords don't match` })
+      }
+
+      db.users.changePassword(req.userId, newpw, (err, user) => {
+        if (err) {
+          res.status(500).json({ error: err.message })
+        } else {
+          res.status(204).send(`Password has been changed for user ${user.id}`)
+        }
+      })
     },
   ]
 }
