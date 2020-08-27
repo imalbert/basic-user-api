@@ -9,6 +9,17 @@ const ACCOUNT_STATUS = {
 }
 module.exports.ACCOUNT_STATUS = ACCOUNT_STATUS
 
+module.exports.findAll = ({ authorized }, done) => {
+  const allUsers = Object.values(users).map(user => ({
+    email: user.email,
+    first_name: user.first_name,
+    last_name: user.last_name,
+  }))
+
+  if (authorized) return done(null, allUsers)
+  return done(null, allUsers.map(({ first_name }) => ({ first_name })))
+}
+
 module.exports.findById = (id, done) => {
   const user = users[id]
 

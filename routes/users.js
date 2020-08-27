@@ -5,11 +5,20 @@ const contains = (a, b) => a.indexOf(b) >= 0
 
 module.exports = {
   find: [
-    (req, res) => {
-      // TODO: has token? return all users
-      // TODO: no token? all users, omit email and last_name
+    function findAllUsers(req, res) {
+      console.log('FIND', req.query.token)
 
-      res.json({ temp: `returning all users` })
+      if (req.query.token) {
+        db.users.findAll({ authorized: true }, (err, allUsers) => {
+          if (err) res.status(500).json({ error: err.message })
+          res.json({ users: allUsers })
+        })
+      } else {
+        db.users.findAll({ authorized: false }, (err, allUsers) => {
+          if (err) res.status(500).json({ error: err.message })
+          res.json({ users: allUsers })
+        })
+      }
     }
   ],
   register: [
