@@ -131,15 +131,15 @@ ${activationLink}
 
       if (newpw !== again) {
         res.status(400).json({ error: `Passwords don't match` })
+      } else {
+        db.users.changePassword(req.userId, newpw, (err, user) => {
+          if (err) {
+            res.status(500).json({ error: err.message })
+          } else {
+            res.status(204).send(`Password has been changed for user ${user.id}`)
+          }
+        })
       }
-
-      db.users.changePassword(req.userId, newpw, (err, user) => {
-        if (err) {
-          res.status(500).json({ error: err.message })
-        } else {
-          res.status(204).send(`Password has been changed for user ${user.id}`)
-        }
-      })
     },
   ]
 }
