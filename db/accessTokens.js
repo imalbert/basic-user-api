@@ -7,6 +7,7 @@ const accessTokens = {}
 
 module.exports.findOne = (token, done) => {
   const userId = accessTokens[token]
+  console.log(accessTokens)
 
   if (userId) return done(null, userId)
   return done(new Error(`Unable to find user for the token ${token}`));

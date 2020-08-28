@@ -6,18 +6,24 @@ const contains = (a, b) => a.indexOf(b) >= 0
 
 module.exports = {
   find: [
-    function findAllUsers(req, res) {
-      if (req.query.token) {
-        db.users.findAll({ authorized: true }, (err, allUsers) => {
-          if (err) res.status(500).json({ error: err.message })
-          res.json({ users: allUsers })
-        })
-      } else {
-        db.users.findAll({ authorized: false }, (err, allUsers) => {
-          if (err) res.status(500).json({ error: err.message })
-          res.json({ users: allUsers })
-        })
+    function findAllUsers(req, res, next) {
+      if (!req.query.token) {
+        req.validToken = false
+        next()
       }
+
+      db.accessTokens.findOne(req.query.token, (err, userId) => {
+        req.validToken = !!userId
+        next()
+      })
+    },
+    function returnUsers(req, res) {
+      let hasAuthorization = { authorized: req.validToken }
+      console.log(hasAuthorization)
+      db.users.findAll(hasAuthorization, (err, allUsers) => {
+        if (err) res.status(500).json({ error: err.message })
+        res.json({ users: allUsers })
+      })
     }
   ],
   register: [
