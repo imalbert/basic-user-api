@@ -14,7 +14,7 @@ module.exports = {
           const token = accessTokens.create()
           accessTokens.insert(user.id, token, (err, access) => {
             console.log(`An access token ${access.token} has been created for the user ${access.userId}.`)
-            res.redirect(`/api/users?token=${access.token}`)
+            res.status(200).send(access.token)
           })
         }
       })
