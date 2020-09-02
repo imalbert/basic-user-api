@@ -156,7 +156,7 @@ curl --location --request PATCH 'http://localhost:18999/api/users/' \
     PORT=8080
 
     // for email service
-    NODEMAILER_SERVICE=gmail
+    NODEMAILER_SERVICE=smtp.gmail.com
     NODEMAILER_PORT=465
     NODEMAILER_USER=mygmailgmail@mygmail.com
     NODEMAILER_PASS=password
