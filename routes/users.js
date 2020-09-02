@@ -35,7 +35,6 @@ module.exports = {
       db.users.register({ ...req.body }, (err, registration) => {
         if (err) {
           if (contains(err.message, `email`) || contains(err.message, `password`)) {
-            console.error(err.message)
             res.status(400).json({ error: err.message })
           }
         } else {
@@ -63,8 +62,9 @@ module.exports = {
       const emailOptions = {
         to: req.registration.email,
         subject: `Email verification for account activation (basic-user-api)`,
-        text: `Please follow the link below to activate your account
-${activationLink}
+        text: `This is your activation token: ${req.activation.token}.
+You may click the link below to activate your account
+${activationLink}.
         `,
       }
 
@@ -85,24 +85,31 @@ ${activationLink}
     }
   ],
   activate: [
+    function getToken(req, res, next) {
+      req.token = req.query.accountActivationToken // from query
+        || (req.headers.authorization && req.headers.authorization.split(' ')[1]) // from header
+        || null
+      next()
+    },
     function verifyActivationToken(req, res, next) {
-      const token = req.query.accountActivationToken
-      if (token) {
-        db.activationTokens.findByActivationToken(token, (err, userId) => {
+      if (req.token) {
+        db.activationTokens.findByActivationToken(req.token, (err, userId) => {
           if (err) {
-            res.status(500).json({ error: err.message })
+            res.status(400).json({ error: err.message })
           } else {
             req.userId = userId
             next()
           }
         })
+      } else {
+        res.status(400).json({ error: `Invalid token` })
       }
     },
     function activateUser(req, res) {
       const token = req.query.accountActivationToken
-      db.users.activateUser(req.userId, (err, user) => {
+      db.users.activateUser(req.userId, (err, { password, ...user }) => {
         console.log(`Account has been activated for user ${user.id}`, user)
-        res.status(200).send(user)
+        res.status(200).send({ user })
       })
     }
   ],

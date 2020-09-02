@@ -22,6 +22,7 @@ app.route('/api/users')
   ])
 app.route('/api/users/activate')
   .get(routes.users.activate)
+  .post(routes.users.activate)
 
 app.listen(process.env.PORT, function(){
   console.log(`Express server is running on ${process.env.PORT}.`);
