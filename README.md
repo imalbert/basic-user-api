@@ -1,6 +1,6 @@
 ### API
 
-##### Register `POST /api/users`
+#### Register `POST /api/users`
 
 Email and password are required. First_name and last_name if not included are set to empty strings. Newly created users have an `account_status: 'INACTIVE'`. User is emailed a token and an activation link for account activation.
 
@@ -33,7 +33,7 @@ curl --location --request POST 'http://localhost:18999/api/users/' \
 }
 ```
 
-##### Login `POST /auth/login`
+#### Login `POST /auth/login`
 
 ```bash
 curl --location --request POST 'http://localhost:18999/auth/login' \
@@ -50,11 +50,10 @@ d6d50fd0-5976-4d95-ab43-088692251c65
 }
 ```
 
-##### User activation `POST /api/users/activate` `GET /api/users/activate`
+#### User activation `POST /api/users/activate` `GET /api/users/activate`
 
 Use the activation token or open the activation link emailed to the user.
 
-##### `POST` or `GET`
 ```bash
 # POST
 curl --location --request POST 'http://localhost:18999/api/users/activate/' \
@@ -83,7 +82,7 @@ curl --location --request POST 'http://localhost:18999/api/users/activate/' \
 curl --location --request GET 'http://localhost:18999/api/users/activate/?accountActivationToken=fc7cf408-6fed-4bbd-ac27-f1027db5d300'
 ```
 
-##### Users list `GET /api/users`
+#### Users list `GET /api/users`
 
 Respond with a list of users. If the user has a valid access token, user data includes email and last_name. Otherwise, both are omitted.
 
@@ -102,7 +101,6 @@ curl --location --request GET 'http://localhost:18999/api/users/' \
     ]
 }
 
-
 # no token/invalid token
 curl --location --request GET 'http://localhost:18999/api/users/'
 
@@ -116,7 +114,8 @@ curl --location --request GET 'http://localhost:18999/api/users/'
 }
 ```
 
-##### Change password `PATCH /api/users`
+#### Change password `PATCH /api/users`
+
 ```bash
 curl --location --request PATCH 'http://localhost:18999/api/users/' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
