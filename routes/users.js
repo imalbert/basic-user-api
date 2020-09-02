@@ -99,7 +99,7 @@ ${activationLink}
       const token = req.query.accountActivationToken
       db.users.activateUser(req.userId, (err, user) => {
         console.log(`Account has been activated for user ${user.id}`, user)
-        res.status(200).send(`Account has been activated for user ${user.id}`)
+        res.status(200).send(user)
       })
     }
   ],
